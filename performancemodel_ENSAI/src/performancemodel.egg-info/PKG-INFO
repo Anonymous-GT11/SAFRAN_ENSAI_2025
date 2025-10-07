@@ -1,0 +1,32 @@
+Metadata-Version: 2.2
+Name: performancemodel
+Version: 0.0.1
+Summary: Performance models for simplified engine simulations.
+Author-email: Solene Thepaut <solene.thepaut@safrangroup.com>
+Description-Content-Type: text/markdown
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: plotly
+Requires-Dist: scipy
+Requires-Dist: sympy
+Provides-Extra: dev
+Requires-Dist: colorcet; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: scikit-learn; extra == "dev"
+Requires-Dist: seaborn; extra == "dev"
+Requires-Dist: xgboost; extra == "dev"
+Provides-Extra: all
+Requires-Dist: performancemodel[dev]; extra == "all"
+
+# Performance Model
+
+MATD project. Aims to construct our own model for turboreactor.
+
+## Getting started
+
+You can install the package using `pip`:
+
+```sh
+pip install -e .[all]
+```

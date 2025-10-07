@@ -1,0 +1,16 @@
+matplotlib
+numpy
+pandas
+plotly
+scipy
+sympy
+
+[all]
+performancemodel[dev]
+
+[dev]
+colorcet
+pytest
+scikit-learn
+seaborn
+xgboost

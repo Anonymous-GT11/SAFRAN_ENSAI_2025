@@ -1,0 +1,16 @@
+README.md
+pyproject.toml
+src/performancemodel/__init__.py
+src/performancemodel/helper.py
+src/performancemodel/maps.py
+src/performancemodel/module.py
+src/performancemodel/parser_data.py
+src/performancemodel/scenarios.py
+src/performancemodel/turboreactors.py
+src/performancemodel.egg-info/PKG-INFO
+src/performancemodel.egg-info/SOURCES.txt
+src/performancemodel.egg-info/dependency_links.txt
+src/performancemodel.egg-info/requires.txt
+src/performancemodel.egg-info/top_level.txt
+src/performancemodel/data/Ge10stg.txt
+src/performancemodel/data/Ge10stg_compact.csv
