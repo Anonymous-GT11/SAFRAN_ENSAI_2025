@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "performancemodel"
+version = "0.0.1"
+authors = [
+    { name="Solene Thepaut", email="solene.thepaut@safrangroup.com" },
+]
+description = "Performance models for simplified engine simulations."
+readme = "README.md"
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "plotly",
+    "scipy",
+    "sympy",
+]
+
+[project.optional-dependencies]
+dev = ["colorcet", "pytest", "scikit-learn", "seaborn", "xgboost"]
+all = ["performancemodel[dev]"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"performancemodel.data" = ["*.txt", "*.csv"]
