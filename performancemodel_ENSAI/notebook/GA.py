@@ -124,10 +124,10 @@ class GeneticAlgorithm:
     ##  Selection
     def selection(self, population: torch.Tensor, fitness_values: torch.Tensor, n_parents: int) -> torch.Tensor:
         """Select parents using tournament selection."""
-        # --- FIXED: Used self.n_genes instead of hardcoded 2 ---
+       
         parents = torch.zeros((n_parents, self.n_genes))
         for i in range(n_parents):
-            # Tournament size is hardcoded to 3 in your original implementation.
+           
             candidates_idx = torch.randint(0, self.pop_size, (3,)) 
             best_idx = candidates_idx[torch.argmax(fitness_values[candidates_idx])]
             parents[i] = population[best_idx]
@@ -162,7 +162,7 @@ class GeneticAlgorithm:
         """
         mutated = individual.clone() 
         
-        # Hyperparameters for mutation scale (0.05 is the initial ratio of range)
+        # Hyperparameters for mutation scale
         range_factor = 0.05 
         max_generations = self.n_generations 
 
