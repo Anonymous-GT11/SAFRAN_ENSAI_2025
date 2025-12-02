@@ -129,7 +129,7 @@ def plot_fitness_convergence(ga: 'GeneticAlgorithmPlaceholder'):
     sns.despine()
     plt.grid(True, alpha=0.3)
     
-    plt.title("Fitness Convergence over Generations (Log-L2 Metric)", fontsize=14, weight="bold")
+    plt.title("Fitness Convergence over Generations ", fontsize=14, weight="bold")
     plt.xlabel("Generation")
     plt.ylabel("Fitness (Higher is Better)")
     plt.legend()
