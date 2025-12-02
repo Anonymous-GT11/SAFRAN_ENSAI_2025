@@ -22,7 +22,7 @@ class GeneticAlgorithmPlaceholder:
 
 
 # POPULATION EVOLUTION (2D and 3D)
-def plot_ga_population_evolution(ga: 'GeneticAlgorithmPlaceholder', best_solution: torch.Tensor, true_health: Optional[Tuple] = None):
+def plot_ga_seaborn(ga: 'GeneticAlgorithmPlaceholder', best_solution: torch.Tensor, true_health: Optional[Tuple] = None):
     """
     Visualize GA population evolution across generations.
     - 2D scatter if 2 genes (e.g., η_comp, η_turb)
@@ -105,7 +105,7 @@ def plot_ga_population_evolution(ga: 'GeneticAlgorithmPlaceholder', best_solutio
 
 
 # FITNESS CONVERGENCE (Best and Average Fitness)
-def plot_fitness_convergence(ga: 'GeneticAlgorithmPlaceholder'):
+def plot_convergence_seaborn(ga: 'GeneticAlgorithmPlaceholder'):
     """
     Plots the convergence of best fitness and average fitness across generations.
     The gap between Best and Average fitness indicates population diversity.
