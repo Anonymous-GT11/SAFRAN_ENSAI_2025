@@ -1,4 +1,3 @@
-%%writefile GA.py
 import torch
 from typing import Tuple, List, Optional, Callable
 import numpy as np
