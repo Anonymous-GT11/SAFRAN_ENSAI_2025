@@ -108,6 +108,18 @@ def simulate_degradation_trajectory(
     slope_mean = speed_params[speed]['mean_slope']
     slope_std = speed_params[speed]['std_slope']
 
+    #-----------------------------------------------------------
+    # combustion chamber 
+    # speed_params_comb = {
+    #     'slow':   {'mean_slope': -0.00008, 'std_slope': 0.00001},
+    #     'normal': {'mean_slope': -0.0002, 'std_slope': 0.00002},
+    #     'fast':   {'mean_slope': -0.0005, 'std_slope': 0.00005}
+    # }
+    # slope_mean = speed_params[speed]['mean_slope']
+    # slope_std = speed_params[speed]['std_slope']
+
+    
+    #----------------------------------------------------------
     # Probabilité de waterwash
     waterwash_probs = {
         'none': 0.0,
@@ -119,6 +131,9 @@ def simulate_degradation_trajectory(
     # Récupération liée au waterwash
     recovery_mean = 0.0015
     recovery_std = 0.00002
+
+    #-----------
+
 
     # Initialisation de la trajectoire
     current_val1 = np.random.normal(1.0, 0.005)
@@ -146,7 +161,7 @@ def simulate_degradation_trajectory(
         # Clamp les valeurs (optionnel)
         current_val1 = np.clip(current_val1, 0.95, 1.02)
         current_val2 = np.clip(current_val2, 0.95, 1.02)
-        current_val3 = np.clip(current_val3, 0.95, 1.02)
+        current_val3 = np.clip(current_val3, 0.98, 1.01)
 
         trajectory.append([current_val1, current_val2, current_val3])
 
