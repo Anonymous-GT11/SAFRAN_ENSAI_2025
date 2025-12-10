@@ -560,7 +560,7 @@ class GeneticAlgorithmv2:
 """
 L2-norm + adaptive mutation 
 """
-class GeneticAlgorithm3:
+class GeneticAlgorithmv3:
     
 
     def __init__(self,
