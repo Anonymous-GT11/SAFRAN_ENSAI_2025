@@ -1088,7 +1088,7 @@ class GeneticAlgorithmPlaceholder:
 
 
 # POPULATION EVOLUTION (2D and 3D)
-def plot_ga_seaborn(ga: 'GeneticAlgorithmPlaceholder', best_solution: torch.Tensor, true_health: Optional[Tuple] = None):
+def plot_ga_seaborn1(ga: 'GeneticAlgorithmPlaceholder', best_solution: torch.Tensor, true_health: Optional[Tuple] = None):
     """
     Visualize GA population evolution across generations.
     - 2D scatter if 2 genes (e.g., η_comp, η_turb)
