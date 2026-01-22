@@ -244,7 +244,7 @@ Every fitness evaluation runs the simulator.
 \]
 -->
 
-![calls-no-cache](https://latex.codecogs.com/svg.image?\text{Calls}_{\text{nocache}}=P\times G)
+![calls-no-cache](https://latex.codecogs.com/svg.image?%5Cmathrm{Calls}_{%5Cmathrm{nocache}}=P%5Ctimes%20G)
 
 
 **Example**  
