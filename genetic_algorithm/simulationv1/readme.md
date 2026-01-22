@@ -45,7 +45,7 @@ Let $m$ denote the total number of compared measurement components
 (e.g. **number of sensors $\times$ number of operating contexts**).
 
 We define the objective function as the **normalized root mean squared error (RMSE)** of the standardized residuals:
-
+<!-- This is the latex block
 $$
 \min_{\mathbf{x} \in \mathcal{X}}
 f(\mathbf{x})
@@ -60,7 +60,7 @@ y_{\text{sim},i}(\mathbf{x}) - y_{\text{meas},i}
 \right)^2
 }
 $$
-
+-->
 
 ![objective-function](https://latex.codecogs.com/svg.image?\min_{\mathbf{x}\in\mathcal{X}}f(\mathbf{x})\sqrt{\frac{1}{m}\sum_{i=1}^{m}\left(\frac{y_{\text{sim},i}(\mathbf{x})-y_{\text{meas},i}}{\sigma_i}\right)^2})
 
@@ -69,7 +69,7 @@ $$
 #### Compact Vector Form
 
 Equivalently, the objective can be written using the Euclidean norm:
-
+<!--
 $$
 f(\mathbf{x})
 =
@@ -82,6 +82,8 @@ f(\mathbf{x})
 }
 \right\|_2
 $$
+-->
+![objective-function](https://latex.codecogs.com/svg.image?f(\mathbf{x})=\sqrt{\frac{1}{m}}\left\|\frac{\mathbf{y}_{\text{sim}}(\mathbf{x})-\mathbf{y}_{\text{meas}}}{\boldsymbol{\sigma}}\right\|_2)
 
 
 
@@ -97,14 +99,16 @@ $$
 
 
 ### Feasible Region (Bounds)
-
+<!--
 $$
 x_j^{\text{lower}} \le x_j \le x_j^{\text{upper}},
 \quad j = 1, \dots, n
 $$
+-->
+![bounds-constraint](https://latex.codecogs.com/svg.image?x_j^{\text{lower}}\le x_j\le x_j^{\text{upper}},\quad j=1,\dots,n)
+
 
 The bounds are enforced directly by the genetic algorithm through candidate  clipping.
-
 
 
 ---
@@ -234,18 +238,26 @@ Let:
 #### Without cache
 
 Every fitness evaluation runs the simulator.
-
+<!--
 \[
-\text{Calls}_{\text{no cache}} = P \times G
+\text{Calls}_{\text{no cache}} = P \times G 
 \]
+-->
+![calls-no-cache](https://latex.codecogs.com/svg.image?\text{Calls}_{\text{no\ cache}}=P\times G)
+
 
 **Example**  
-- \(P = 80\)  
-- \(G = 50\)  
 
+- $P = 80$
+- $G = 50$
+
+<!--
 \[
-\text{Calls}_{\text{no cache}} = 80 \times 50 = 4000
+\text{Calls}_{\text{no cache}} = 80 \times 50 = 4000 $
 \]
+-->
+![calls-no-cache-numeric](https://latex.codecogs.com/svg.image?\text{Calls}_{\text{no\ cache}}=80\times50=4000)
+
 
 ---
 
@@ -253,9 +265,14 @@ Every fitness evaluation runs the simulator.
 
 The simulator is executed **only once per unique individual**.
 
+<!--
 \[
 \text{Calls}_{\text{cache}} = U \quad \text{with } U \le P \times G
 \]
+-->
+
+![calls-cache-bound](https://latex.codecogs.com/svg.image?\text{Calls}_{\text{cache}}=U\quad\text{with}\quad U\le P\times G)
+
 
 Where:
 - duplicates caused by **elitism**
@@ -274,18 +291,27 @@ As the GA converges:
 - Many individuals are re-evaluations of the same states  
 
 So usually:
-
+<!--
 \[
 U \ll P \times G
 \]
+-->
+![u-much-less](https://latex.codecogs.com/svg.image?U\ll P\times G)
+
 
 **Example (realistic)**  
-- \(P = 80\), \(G = 50\)  
+
+- $P = 80$ , $G = 50$ 
+
 - Unique individuals explored: \(U \approx 800\)
 
+<!--
 \[
 \text{Calls}_{\text{cache}} \approx 800 \quad \text{instead of } 4000
 \]
+-->
+![calls-cache-approx](https://latex.codecogs.com/svg.image?\text{Calls}_{\text{cache}}\approx800\quad\text{instead\ of}\quad4000)
+
 
 ---
 
@@ -293,8 +319,12 @@ U \ll P \times G
 
 The cache changes the computational cost from:
 
+<!--
 \[
 \mathcal{O}(P \times G) \;\; \rightarrow \;\; \mathcal{O}(U)
 \]
+-->
+![complexity-reduction](https://latex.codecogs.com/svg.image?\mathcal{O}(P\times G)\;\rightarrow\;\mathcal{O}(U))
+
 
 making the GA **significantly faster** once the population starts converging.
