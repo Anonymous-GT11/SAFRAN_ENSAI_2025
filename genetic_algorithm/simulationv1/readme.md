@@ -105,7 +105,7 @@ x_j^{\text{lower}} \le x_j \le x_j^{\text{upper}},
 \quad j = 1, \dots, n
 $$
 -->
-![bounds-constraint](https://latex.codecogs.com/svg.image?x_j^{\text{lower}}\le x_j\le x_j^{\text{upper}},\quad j=1,\dots,n)
+![bounds-constraint](https://latex.codecogs.com/svg.image?x_j^{\text{lower}}\le%20x_j\le%20x_j^{\text{upper}},\quad%20j=1,\dots,n)
 
 
 The bounds are enforced directly by the genetic algorithm through candidate  clipping.
@@ -243,6 +243,7 @@ Every fitness evaluation runs the simulator.
 \text{Calls}_{\text{no cache}} = P \times G 
 \]
 -->
+
 ![calls-no-cache](https://latex.codecogs.com/svg.image?\text{Calls}_{\text{no\ cache}}=P\times G)
 
 
