@@ -177,7 +177,7 @@ These factors make the inverse problem **ill-posed and highly non-linear**, moti
 
 
 
-## 1 Our 3 Target Indicators
+## 1. Our 3 Target Indicators
 
 | Indicator | Component | Physical Meaning | Degradation Range |
 |-----------|-----------|------------------|---------------------|
@@ -193,7 +193,7 @@ These factors make the inverse problem **ill-posed and highly non-linear**, moti
 - **HPC efficiency**: Degrades due to fouling, blade erosion, seal wear
 - **HPT efficiency**: Most critical - operates at highest temperatures, subject to creep, oxidation, thermal fatigue
 
-## 2 Sensor Selection
+## 2. Sensor Selection
 
 We use **3 sensors at different condition**:
 
