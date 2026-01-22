@@ -62,6 +62,9 @@ y_{\text{sim},i}(\mathbf{x}) - y_{\text{meas},i}
 $$
 
 
+![objective-function](https://latex.codecogs.com/svg.image?\min_{\mathbf{x}\in\mathcal{X}}f(\mathbf{x})\sqrt{\frac{1}{m}\sum_{i=1}^{m}\left(\frac{y_{\text{sim},i}(\mathbf{x})-y_{\text{meas},i}}{\sigma_i}\right)^2})
+
+
 
 #### Compact Vector Form
 
