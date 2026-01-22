@@ -244,7 +244,7 @@ Every fitness evaluation runs the simulator.
 \]
 -->
 
-![calls-cache-bound](https://latex.codecogs.com/svg.image?%5Cmathrm{Calls}_{%5Cmathrm{cache}}=U,%20U%5Cle%20P%5Ctimes%20G)
+![calls-no-cache](https://latex.codecogs.com/svg.image?%5Cmathrm{Calls}_{%5Cmathrm{nocache}}=P%5Ctimes%20G)
 
 
 **Example**  
@@ -272,7 +272,7 @@ The simulator is executed **only once per unique individual**.
 \]
 -->
 
-![calls-cache-bound](https://latex.codecogs.com/svg.image?\text{Calls}_{\text{cache}}=U,\;U\le P\times G)
+![calls-cache-bound](https://latex.codecogs.com/svg.image?%5Cmathrm{Calls}_{%5Cmathrm{cache}}=U,%20U%5Cle%20P%5Ctimes%20G)
 
 
 Where:
@@ -297,7 +297,8 @@ So usually:
 U \ll P \times G
 \]
 -->
-![u-much-less](https://latex.codecogs.com/svg.image?U\ll P\times G)
+
+![u-much-less](https://latex.codecogs.com/svg.image?U%5Cll%20P%5Ctimes%20G)
 
 
 **Example (realistic)**  
@@ -311,7 +312,7 @@ U \ll P \times G
 \text{Calls}_{\text{cache}} \approx 800 \quad \text{instead of } 4000
 \]
 -->
-![calls-cache-approx](https://latex.codecogs.com/svg.image?\text{Calls}_{\text{cache}}\approx800\;\ll\;4000)
+![calls-cache-approx](https://latex.codecogs.com/svg.image?%5Cmathrm{Calls}_{%5Cmathrm{cache}}%5Capprox800%20%5Cll%204000)
 
 
 ---
@@ -325,7 +326,7 @@ The cache changes the computational cost from:
 \mathcal{O}(P \times G) \;\; \rightarrow \;\; \mathcal{O}(U)
 \]
 -->
-![complexity-reduction](https://latex.codecogs.com/svg.image?\mathcal{O}(P\times G)\rightarrow\mathcal{O}(U))
+![complexity-reduction](https://latex.codecogs.com/svg.image?%5Cmathcal{O}(P%5Ctimes%20G)%5Crightarrow%5Cmathcal{O}(U))
 
 
 making the GA **significantly faster** once the population starts converging.
