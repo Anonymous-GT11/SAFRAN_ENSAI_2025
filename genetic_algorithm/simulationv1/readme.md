@@ -269,6 +269,7 @@ Every fitness evaluation runs the simulator.
 
 #### With cache
 
+
 The simulator is executed **only once per unique individual**.
 
 <!--
