@@ -14,9 +14,9 @@ This notebook includes:
 3. **Clean and noisy data** comparison
 4. **Uses existing original and noisy CSV file**
 
-<span style="color:red;">**More details on the methodology can be found in the** <strong>**`Reports folder`**</strong>.</span>
+<!--<span style="color:red;">**More details on the methodology can be found in the** <strong>**`Reports folder`**</strong>.</span> -->
 
-<!--<span style="color:red;">More details on the methodology can be found in the  <strong> ![Details](https://img.shields.io/badge/Reports%20folder-red) </strong></span> -->
+<span style="color:red;">More details on the methodology can be found in the  <strong> ![Details](https://img.shields.io/badge/Reports%20folder-red) </strong></span> 
 
 
 ---
@@ -311,7 +311,7 @@ U \ll P \times G
 
 - $P = 80$ , $G = 50$ 
 
-- Unique individuals explored: \(U \approx 800\)
+- Unique individuals explored: $(U \approx 800 )$
 
 <!--
 \[
