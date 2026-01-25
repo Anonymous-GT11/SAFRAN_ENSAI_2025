@@ -485,25 +485,59 @@ class GeneticAlgorithm:
     #     self.initial_population = pop.copy()
     #     return pop
 
-    def _init_population(self) -> np.ndarray:
+    # def _init_population(self) -> np.ndarray:
+    #     """
+    #     Initialize GA population using Latin Hypercube Sampling (LHS)
+    #     for better space-filling properties.
+    #     """
+
+    #     sampler = qmc.LatinHypercube(d=self.n_genes)
+
+    #     # Generate samples in [0, 1]
+    #     sample_unit = sampler.random(n=self.config.population_size)
+
+    #     # Scale to parameter bounds
+    #     pop = qmc.scale(sample_unit, self.lower, self.upper)
+
+    #     # Force first individual to be the reference (all zeros)
+    #     pop[0] = np.zeros(self.n_genes)
+    #     self.initial_population = pop.copy()
+
+    #     return pop
+    def _init_population(self, n_times: int = 4) -> np.ndarray:
         """
-        Initialize GA population using Latin Hypercube Sampling (LHS)
-        for better space-filling properties.
+        Initialize GA population using repeated Latin Hypercube Sampling (LHS)
+        and take the mean population to reduce sampling variance.
+    
+        Args:
+            n_times (int): Number of LHS runs to average
         """
-
-        sampler = qmc.LatinHypercube(d=self.n_genes)
-
-        # Generate samples in [0, 1]
-        sample_unit = sampler.random(n=self.config.population_size)
-
-        # Scale to parameter bounds
-        pop = qmc.scale(sample_unit, self.lower, self.upper)
-
+    
+        populations = []
+    
+        for _ in range(n_times):
+            sampler = qmc.LatinHypercube(d=self.n_genes)
+    
+            # Sample in [0, 1]
+            sample_unit = sampler.random(n=self.config.population_size)
+    
+            # Scale to parameter bounds
+            pop = qmc.scale(sample_unit, self.lower, self.upper)
+    
+            populations.append(pop)
+    
+        # Shape: (n_times, population_size, n_genes)
+        populations = np.stack(populations, axis=0)
+    
+        # Mean population across LHS runs
+        pop_mean = populations.mean(axis=0)
+    
         # Force first individual to be the reference (all zeros)
-        pop[0] = np.zeros(self.n_genes)
-        self.initial_population = pop.copy()
-
-        return pop
+        pop_mean[0] = np.zeros(self.n_genes)
+    
+        self.initial_population = pop_mean.copy()
+    
+        return pop_mean
 
 
     def _tournament(self, pop: np.ndarray, fitness: np.ndarray) -> np.ndarray:
@@ -1280,7 +1314,7 @@ def plot_ablation_resultsv2(ablation_df: pd.DataFrame, save_path: str = None, ti
     axes[1,0].bar(range(n_configs), impacts, color=colors)
     axes[1,0].set_xticks(range(n_configs))
     axes[1,0].set_xticklabels(configs, rotation=45, ha='right')
-    axes[1,0].set_ylabel('Impact (%)'); axes[0,1].set_title('Impact of Removal')
+    axes[1,0].set_ylabel('Impact (%)'); axes[1,0].set_title('Impact of Removal')
     axes[1,0].axhline(0, color='black', ls='-', lw=0.5)
     axes[1,0].grid(True, alpha=0.3, axis='y')
 

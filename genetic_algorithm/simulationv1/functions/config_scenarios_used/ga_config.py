@@ -13,8 +13,8 @@ from dataclasses import dataclass
 
 @dataclass
 class GAConfig:
-    population_size: int = 150
-    n_generations: int = 200
+    population_size: int = 100
+    n_generations: int = 300
     tournament_rate: float = 0.1
     elitism_rate: float = 0.05
     crossover_rate: float = 0.85
@@ -51,7 +51,7 @@ OUTPUT_BASE_DIR = "../experiments"
 # ============================================================
 # ALL AVAILABLE CONTEXTS AND SENSORS
 # ============================================================
-ALL_CONTEXTS =  ["CRUISE"] #  "TAKEOFF", "CLIMB1", "CLIMB2"]
+ALL_CONTEXTS =  ["CRUISE",  "TAKEOFF", "CLIMB1", "CLIMB2"]
 ALL_SENSORS = ["HPC_Tin", "LPT_Tin", "HPC_Pout_st"]
 
 # Indicators to estimate (fixed - 3 components)
@@ -99,9 +99,9 @@ INDICATOR_SHORT_NAMES = {
 # Define scenarios
 CONTEXT_SCENARIOS = [
         ["CRUISE"],
-        # ["CRUISE", "TAKEOFF"],
-        # ["CRUISE", "TAKEOFF", "CLIMB1"],
-        # ["CRUISE", "TAKEOFF", "CLIMB1", "CLIMB2"],
+        ["CRUISE", "TAKEOFF"],
+        ["CRUISE", "TAKEOFF", "CLIMB1"],
+        ["CRUISE", "TAKEOFF", "CLIMB1", "CLIMB2"],
     ]
     
 SENSOR_SCENARIOS = [
