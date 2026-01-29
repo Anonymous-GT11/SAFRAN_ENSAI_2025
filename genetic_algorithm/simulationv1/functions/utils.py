@@ -16,6 +16,8 @@ from odsmr.predefined_flight_conditions import Cruise_DeckSMR, Takeoff_DeckSMR, 
 from odsmr.generation_functions import decksmr_1forall
 from odsmr.constants import ROOT_OPENDECK, STATE_LABELS, STATE_BOUNDS
 
+
+
 SENSOR_OBJECTS = {
     "HPC_Tout": HPC_Tout(), 
     "HP_Nmech": HP_Nmech(), 
@@ -185,6 +187,109 @@ def generate_multicontext_synthetic_data_lhs(
     print(f"\n✓ Generated {len(df_synthetic)} consistent multi-context samples")
 
     return df_synthetic
+    
+#======================================================
+def generate_multicontext_synthetic_data_from_file(
+    csv_path: str,
+    flight_contexts: List[str],
+    sensor_short_names: List[str],
+    n_samples: int = None,  # If None, use all rows from file
+):
+    """
+    Generate synthetic data with ALL flight contexts using
+    degradation states from an existing CSV file.
+    
+    Args:
+        csv_path: Path to CSV containing degradation values
+        flight_contexts: List of contexts e.g., ["CRUISE", "TAKEOFF"]
+        sensor_short_names: List of sensors e.g., ["HPC_Tin", "LPT_Tin"]
+        n_samples: Number of samples to use (None = all rows)
+    
+    Returns:
+        DataFrame with degradation states + sensor measurements for all contexts
+    """
+    # Load existing degradation data
+    df_source = pd.read_csv(csv_path)
+    print(f"Loaded {len(df_source)} rows from {csv_path}")
+    
+    # Degradation columns to extract
+    DEG_COLUMNS = [
+        'deg_CmpBst_s_mapEff_in', 'deg_CmpBst_s_mapWc_in',
+        'deg_CmpFan_s_mapEff_in', 'deg_CmpFan_s_mapWc_in',
+        'deg_CmpH_s_mapEff_in', 'deg_CmpH_s_mapWc_in',
+        'deg_TrbH_s_mapEff_in', 'deg_TrbH_s_mapWc_in',
+        'deg_TrbL_s_mapEff_in', 'deg_TrbL_s_mapWc_in',
+    ]
+    
+    # Verify columns exist
+    missing_cols = [c for c in DEG_COLUMNS if c not in df_source.columns]
+    if missing_cols:
+        raise ValueError(f"Missing columns in CSV: {missing_cols}")
+    
+    # Limit samples if specified
+    if n_samples is not None and n_samples < len(df_source):
+        df_source = df_source.iloc[:n_samples]
+    
+    n_samples = len(df_source)
+    print(f"Using {n_samples} samples")
+    print(f"Contexts: {flight_contexts}")
+    print(f"Sensors: {sensor_short_names}")
+    
+    sensors_list = [SENSOR_OBJECTS[s] for s in sensor_short_names]
+    
+    data = []
+    
+    # --------------------------------------------------
+    # Simulation loop
+    # --------------------------------------------------
+    for i in range(n_samples):
+        row_source = df_source.iloc[i]
+        
+        # Build state vector from file (matching STATE_LABELS order)
+        state = np.zeros(len(STATE_LABELS))
+        for j, label in enumerate(STATE_LABELS):
+            if label in DEG_COLUMNS:
+                state[j] = row_source[label]
+            # else: remains 0 (healthy)
+        
+        row = {'sample_id': i}
+        
+        # Store health indicators
+        for j, label in enumerate(STATE_LABELS):
+            row[label] = state[j]
+        
+        # Build simulator contexts
+        context_list = [CONTEXT_TEMPLATE[ctx] for ctx in flight_contexts]
+        
+        result = decksmr_1forall(
+            [state],
+            context_list,
+            sensors_list,
+            ROOT_OPENDECK
+        )
+        
+        for ctx_idx, ctx in enumerate(flight_contexts):
+            # Sensor outputs
+            for s in sensors_list:
+                row[f'{ctx}_DECKSMR{s.name}'] = result[s.name].values[ctx_idx]
+            
+            # Flight conditions (copied for completeness)
+            fc = CONTEXT_TEMPLATE[ctx].flight_condition
+            row[f'{ctx}_DTAMB'] = fc.DTAMB
+            row[f'{ctx}_ALT'] = fc.ALT
+            row[f'{ctx}_MACH'] = fc.MACH
+            row[f'{ctx}_COMMAND'] = fc.COMMAND
+        
+        data.append(row)
+        
+        if (i + 1) % 20 == 0 or i == n_samples - 1:
+            print(f"  Generated {i+1}/{n_samples} samples")
+    
+    df_synthetic = pd.DataFrame(data)
+    print(f"\n✓ Generated {len(df_synthetic)} consistent multi-context samples")
+    
+    return df_synthetic
+#---------------------------------------------------------
 
 
 

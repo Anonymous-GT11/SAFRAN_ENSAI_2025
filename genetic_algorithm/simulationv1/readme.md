@@ -163,7 +163,7 @@ These factors make the inverse problem **ill-posed and highly non-linear**, moti
 
 | Parameter | Value | Explanation | How to Tune |
 |-----------|-------|-------------|-------------|
-| `population_size` | 40-100 | Larger = more exploration, slower | If stuck in local minima, increase |
+| `population_size` | 40-200 | Larger = more exploration, slower | If stuck in local minima, increase |
 | `tournament_size` | 0.1 | Selection pressure (higher = more greedy) | 10% .If diversity too low, decrease to 2 |
 | `elitism_rate` | 0.01-0.05 | Best individuals preserved | Keep 2-5% of population |
 | `crossover_rate` | 0.85 | Probability of combining parents | 0.7-0.9 typical |

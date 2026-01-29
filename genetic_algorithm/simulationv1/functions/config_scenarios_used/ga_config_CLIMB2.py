@@ -63,10 +63,10 @@ INDICATORS_TO_ESTIMATE = [
 
 # Context and sensor mappings
 CONTEXT_MAP = {
-    "CRUISE": Cruise_DeckSMR,
+    # "CRUISE": Cruise_DeckSMR,
     # "TAKEOFF": Takeoff_DeckSMR,
     # "CLIMB1": Climb1_DeckSMR,
-    # "CLIMB2": Climb2_DeckSMR,
+    "CLIMB2": Climb2_DeckSMR,
 }
 
 SENSOR_OBJECTS = {
@@ -117,21 +117,21 @@ INDICATOR_SHORT_NAMES = {
 # RECOMMENDED CONFIGURATION
 # ============================================================
 
-ALL_CONTEXTS = ["CRUISE"] #, "TAKEOFF", "CLIMB1", "CLIMB2"]
+ALL_CONTEXTS = ["CLIMB2"] #, "TAKEOFF", "CLIMB1", "CLIMB2"]
 ALL_SENSORS = ["HPC_Tin", "LPT_Tin", "HPC_Pout_st"]
 
 CONTEXT_MAP = {
-    "CRUISE": Cruise_DeckSMR,
+    # "CRUISE": Cruise_DeckSMR,
     # "TAKEOFF": Takeoff_DeckSMR,
     # "CLIMB1": Climb1_DeckSMR,
-    # "CLIMB2": Climb2_DeckSMR,
+    "CLIMB2": Climb2_DeckSMR,
 }
 
 CONTEXT_SCENARIOS = [
-    ["CRUISE"],  
+    # ["CRUISE"],  
     # ["TAKEOFF"], # 1 ctx - baseline
     # ["CLIMB1"],
-   # [ "CLIMB2"]
+   [ "CLIMB2"]
     # ["CRUISE", "TAKEOFF"],                         # 2 ctx - add transient
     # ["CRUISE", "TAKEOFF", "CLIMB1", "CLIMB2"],     # 4 ctx - all
 ]

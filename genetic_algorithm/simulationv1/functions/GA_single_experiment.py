@@ -263,7 +263,7 @@ for s in ALL_SENSORS:
 #         return max(1, int(self.population_size * self.tournament_rate))
 
 config = GAConfig()
-print(f"Population: {config.population_size}, Elitism: {config.elitism_count}, Tournament: {config.tournament_size}")
+print(f"Population size: {config.population_size}, Elitism: {config.elitism_count}, Tournament: {config.tournament_size}")
 
 
 
@@ -485,59 +485,59 @@ class GeneticAlgorithm:
     #     self.initial_population = pop.copy()
     #     return pop
 
-    # def _init_population(self) -> np.ndarray:
-    #     """
-    #     Initialize GA population using Latin Hypercube Sampling (LHS)
-    #     for better space-filling properties.
-    #     """
-
-    #     sampler = qmc.LatinHypercube(d=self.n_genes)
-
-    #     # Generate samples in [0, 1]
-    #     sample_unit = sampler.random(n=self.config.population_size)
-
-    #     # Scale to parameter bounds
-    #     pop = qmc.scale(sample_unit, self.lower, self.upper)
-
-    #     # Force first individual to be the reference (all zeros)
-    #     pop[0] = np.zeros(self.n_genes)
-    #     self.initial_population = pop.copy()
-
-    #     return pop
-    def _init_population(self, n_times: int = 4) -> np.ndarray:
+    def _init_population(self) -> np.ndarray:
         """
-        Initialize GA population using repeated Latin Hypercube Sampling (LHS)
-        and take the mean population to reduce sampling variance.
-    
-        Args:
-            n_times (int): Number of LHS runs to average
+        Initialize GA population using Latin Hypercube Sampling (LHS)
+        for better space-filling properties.
         """
-    
-        populations = []
-    
-        for _ in range(n_times):
-            sampler = qmc.LatinHypercube(d=self.n_genes)
-    
-            # Sample in [0, 1]
-            sample_unit = sampler.random(n=self.config.population_size)
-    
-            # Scale to parameter bounds
-            pop = qmc.scale(sample_unit, self.lower, self.upper)
-    
-            populations.append(pop)
-    
-        # Shape: (n_times, population_size, n_genes)
-        populations = np.stack(populations, axis=0)
-    
-        # Mean population across LHS runs
-        pop_mean = populations.mean(axis=0)
-    
+
+        sampler = qmc.LatinHypercube(d=self.n_genes)
+
+        # Generate samples in [0, 1]
+        sample_unit = sampler.random(n=self.config.population_size)
+
+        # Scale to parameter bounds
+        pop = qmc.scale(sample_unit, self.lower, self.upper)
+
         # Force first individual to be the reference (all zeros)
-        pop_mean[0] = np.zeros(self.n_genes)
+        pop[0] = np.zeros(self.n_genes)
+        self.initial_population = pop.copy()
+
+        return pop
+    # def _init_population(self, n_times: int = 4) -> np.ndarray:
+    #     """
+    #     Initialize GA population using repeated Latin Hypercube Sampling (LHS)
+    #     and take the mean population to reduce sampling variance.
     
-        self.initial_population = pop_mean.copy()
+    #     Args:
+    #         n_times (int): Number of LHS runs to average
+    #     """
     
-        return pop_mean
+    #     populations = []
+    
+    #     for _ in range(n_times):
+    #         sampler = qmc.LatinHypercube(d=self.n_genes)
+    
+    #         # Sample in [0, 1]
+    #         sample_unit = sampler.random(n=self.config.population_size)
+    
+    #         # Scale to parameter bounds
+    #         pop = qmc.scale(sample_unit, self.lower, self.upper)
+    
+    #         populations.append(pop)
+    
+    #     # Shape: (n_times, population_size, n_genes)
+    #     populations = np.stack(populations, axis=0)
+    
+    #     # Mean population across LHS runs
+    #     pop_mean = populations.mean(axis=0)
+    
+    #     # Force first individual to be the reference (all zeros)
+    #     pop_mean[0] = np.zeros(self.n_genes)
+    
+    #     self.initial_population = pop_mean.copy()
+    
+    #     return pop_mean
 
 
     def _tournament(self, pop: np.ndarray, fitness: np.ndarray) -> np.ndarray:
@@ -696,6 +696,8 @@ class GeneticAlgorithm:
                     print(f"Early stop at gen {gen}")
                 break
 
+                
+
         self.final_population = pop.copy()
         self.final_fitness = fitness.copy()
 
@@ -785,6 +787,89 @@ def plot_convergence(history: Dict, true_indicators: Dict, config: GAConfig,
     if save_path:
         plt.savefig(save_path, dpi=150, bbox_inches='tight')
     plt.show()
+    
+#////////////////////NEW
+
+def plot_true_vs_estimated_by_row(results_df: pd.DataFrame, save_path: str = None, title: str = "True vs Estimated"):
+    """
+    Plot True vs Estimated with colors by row index.
+    Each row has the same color for all 3 indicators, different markers for indicators.
+    """
+    fig, ax = plt.subplots(figsize=(8, 6))
+    
+    short_names = [INDICATOR_SHORT_NAMES[ind] for ind in INDICATORS_TO_ESTIMATE]
+    
+    # Different markers for each indicator
+    markers = ['o', 's', '^']  # Circle, Square, Triangle
+    
+    # Color map for rows
+    n_rows = len(results_df)
+    colors = plt.cm.tab10(np.linspace(0, 1, min(n_rows, 10)))  # Up to 10 distinct colors
+    if n_rows > 10:
+        colors = plt.cm.viridis(np.linspace(0, 1, n_rows))
+    
+    all_vals = []
+    
+    # Plot each row with same color, different marker per indicator
+    for row_idx, (_, row) in enumerate(results_df.iterrows()):
+        row_color = colors[row_idx % len(colors)]
+        row_label = f"Row {int(row['row_index'])}"
+        
+        for ind_idx, short in enumerate(short_names):
+            true_col = f'true_{short}'
+            est_col = f'est_{short}'
+            
+            if true_col in results_df.columns:
+                true_val = row[true_col]
+                est_val = row[est_col]
+                
+                # Only add row label once (for first indicator)
+                label = row_label if ind_idx == 0 else None
+                
+                ax.scatter(true_val, est_val,
+                          c=[row_color],
+                          marker=markers[ind_idx],
+                          s=120,
+                          alpha=0.8,
+                          edgecolors='black',
+                          linewidths=0.5,
+                          label=label)
+                
+                all_vals.extend([true_val, est_val])
+    
+    # Perfect line
+    if all_vals:
+        lim = [min(all_vals) - 0.005, max(all_vals) + 0.005]
+        ax.plot(lim, lim, 'k--', alpha=0.5, linewidth=2, label='Perfect')
+        ax.set_xlim(lim)
+        ax.set_ylim(lim)
+    
+    # Add marker legend separately
+    marker_handles = [
+        plt.Line2D([0], [0], marker='o', color='gray', linestyle='', markersize=10, label='Fan Wc'),
+        plt.Line2D([0], [0], marker='s', color='gray', linestyle='', markersize=10, label='HPC Eff'),
+        plt.Line2D([0], [0], marker='^', color='gray', linestyle='', markersize=10, label='HPT Eff'),
+    ]
+    
+    # Two legends: one for rows (colors), one for indicators (markers)
+    legend1 = ax.legend(loc='upper left', fontsize=9, title='Row Index')
+    ax.add_artist(legend1)
+    legend2 = ax.legend(handles=marker_handles, loc='lower right', fontsize=9, title='Indicator')
+    
+    ax.set_xlabel('True', fontsize=12)
+    ax.set_ylabel('Estimated', fontsize=12)
+    ax.set_title(title, fontsize=14, fontweight='bold')
+    ax.grid(True, alpha=0.3)
+    ax.set_aspect('equal')
+    
+    plt.tight_layout()
+    
+    if save_path:
+        plt.savefig(save_path, dpi=150, bbox_inches='tight')
+    plt.show()
+
+    
+
 
 
 def plot_3d_search_trajectory(history: Dict, true_vals: List[float], save_path: str = None, title_suffix: str = ""):
@@ -968,23 +1053,62 @@ def plot_results_summary(results_df: pd.DataFrame, save_path: str = None, title:
     axes[1,0].set_yscale('log')
 
     # 4. True vs Estimated scatter (keep as is - this one is good)
-    for i, ind in enumerate(INDICATORS_TO_ESTIMATE):
-        short = INDICATOR_SHORT_NAMES[ind]
-        if f'true_{short}' in results_df.columns and f'est_{short}' in results_df.columns:
-            axes[1,1].scatter(results_df[f'true_{short}'], results_df[f'est_{short}'],
-                             c=[colors[i]], alpha=0.7, label=short, s=40)
+    # for i, ind in enumerate(INDICATORS_TO_ESTIMATE):
+    #     short = INDICATOR_SHORT_NAMES[ind]
+    #     if f'true_{short}' in results_df.columns and f'est_{short}' in results_df.columns:
+    #         axes[1,1].scatter(results_df[f'true_{short}'], results_df[f'est_{short}'],
+    #                          c=[colors[i]], alpha=0.7, label=short, s=40)
 
+    # all_vals = []
+    # for ind in INDICATORS_TO_ESTIMATE:
+    #     short = INDICATOR_SHORT_NAMES[ind]
+    #     if f'true_{short}' in results_df.columns:
+    #         all_vals.extend(results_df[f'true_{short}'].tolist())
+    #         all_vals.extend(results_df[f'est_{short}'].tolist())
+    # if all_vals:
+    #     lim = [min(all_vals) - 0.01, max(all_vals) + 0.01]
+    #     axes[1,1].plot(lim, lim, 'k--', alpha=0.5, label='Perfect')
+    # axes[1,1].set_xlabel('True'); axes[1,1].set_ylabel('Estimated')
+    # axes[1,1].set_title('True vs Estimated'); axes[1,1].legend(); axes[1,1].grid(True, alpha=0.3)
+    # True vs Estimated (colored by row)
+    markers = ['o', 's', '^']
+    n_rows = len(results_df)
+    colors = plt.cm.tab10(np.linspace(0, 1, min(n_rows, 10)))
+    
     all_vals = []
-    for ind in INDICATORS_TO_ESTIMATE:
-        short = INDICATOR_SHORT_NAMES[ind]
-        if f'true_{short}' in results_df.columns:
-            all_vals.extend(results_df[f'true_{short}'].tolist())
-            all_vals.extend(results_df[f'est_{short}'].tolist())
+    for row_idx, (_, row) in enumerate(results_df.iterrows()):
+        row_color = colors[row_idx % len(colors)]
+        for ind_idx, short in enumerate(short_names):
+            true_val = row[f'true_{short}']
+            est_val = row[f'est_{short}']
+            label = f"Row {int(row['row_index'])}" if ind_idx == 0 else None
+            axes[1,1].scatter(true_val, est_val, c=[row_color], marker=markers[ind_idx],
+                             s=80, alpha=0.8, edgecolors='black', linewidths=0.3, label=label)
+            all_vals.extend([true_val, est_val])
+    
     if all_vals:
-        lim = [min(all_vals) - 0.01, max(all_vals) + 0.01]
-        axes[1,1].plot(lim, lim, 'k--', alpha=0.5, label='Perfect')
+        lim = [min(all_vals) - 0.005, max(all_vals) + 0.005]
+        axes[1,1].plot(lim, lim, 'k--', alpha=0.5)
+    
+    # Indicator legend (markers)
+    marker_handles = [
+        plt.Line2D([0], [0], marker='o', color='gray', linestyle='', markersize=8, label='Fan Wc'),
+        plt.Line2D([0], [0], marker='s', color='gray', linestyle='', markersize=8, label='HPC Eff'),
+        plt.Line2D([0], [0], marker='^', color='gray', linestyle='', markersize=8, label='HPT Eff'),
+    ]
+    
+    # Row legend (colors)
+    legend1 = axes[1,1].legend(loc='upper left', fontsize=6, title='Row', title_fontsize=7)
+    axes[1,1].add_artist(legend1)
+    
+    # Indicator legend
+    legend2 = axes[1,1].legend(handles=marker_handles, loc='lower right', fontsize=7, title='Indicator', title_fontsize=7)
+    
     axes[1,1].set_xlabel('True'); axes[1,1].set_ylabel('Estimated')
-    axes[1,1].set_title('True vs Estimated'); axes[1,1].legend(); axes[1,1].grid(True, alpha=0.3)
+    axes[1,1].set_title('True vs Estimated (color=row, shape=indicator)')
+    axes[1,1].grid(True, alpha=0.3)
+
+
 
     plt.suptitle(title, fontweight='bold')
     plt.tight_layout()
@@ -992,6 +1116,9 @@ def plot_results_summary(results_df: pd.DataFrame, save_path: str = None, title:
     if save_path:
         plt.savefig(save_path, dpi=150, bbox_inches='tight')
     plt.show()
+
+
+    
 
 print("Plotting functions defined.")
 
@@ -1378,6 +1505,7 @@ def run_scenario_experiment(df: pd.DataFrame,
                             contexts: List[str], 
                             sensors: List[str],
                             n_test_rows: int,
+                            row_to_use : int,
                             config: GAConfig) -> Tuple[pd.DataFrame, Dict, Dict]:
     """
     Run GA on multiple rows for a given scenario.
@@ -1397,7 +1525,18 @@ def run_scenario_experiment(df: pd.DataFrame,
             std_val = df[col].std()
             norm_factors[ctx][short] = std_val if std_val > 1e-10 else abs(df[col].mean())
 
-    test_indices = np.random.choice(len(df), min(n_test_rows, len(df)), replace=False)
+    # test_indices = np.random.choice(len(df), min(n_test_rows, len(df)), replace=False)
+
+    if n_test_rows is None:
+        test_indices = np.array([row_to_use])
+    else:
+        test_indices = np.random.choice(
+            len(df),
+            min(n_test_rows, len(df)),
+            replace=False
+        )
+
+    
 
     for idx_num, idx in enumerate(test_indices):
         test_row = df.iloc[idx]
@@ -1482,7 +1621,7 @@ def run_scenario_experiment(df: pd.DataFrame,
 
 
 def run_all_experiments(df_clean: pd.DataFrame, df_noisy: pd.DataFrame,
-                        n_test_rows: int, output_base_dir: str ):
+                        n_test_rows: int, row_to_use:int, output_base_dir: str ):
     """
     Run all scenario experiments on clean and noisy data.
     """
@@ -1535,6 +1674,8 @@ def run_all_experiments(df_clean: pd.DataFrame, df_noisy: pd.DataFrame,
                     contexts=contexts,
                     sensors=sensors,
                     n_test_rows=n_test_rows,
+                    row_to_use = row_to_use,
+                    
                     config=config
                 )
 
@@ -1553,6 +1694,13 @@ def run_all_experiments(df_clean: pd.DataFrame, df_noisy: pd.DataFrame,
                     save_path=os.path.join(scenario_dir, "results_summary.png"),
                     title=f"{data_type.capitalize()} | {n_ctx} ctx × {n_sens} sens"
                 )
+
+
+                plot_true_vs_estimated_by_row(
+                    results_df, 
+                    save_path= os.path.join(scenario_dir, "true_vs_estimated_by_row.png" ), 
+                    title=f"{data_type.capitalize()} | {n_ctx} ctx × {n_sens} sens")
+                                
 
                 # Plot convergence (example)
                 if example_history:

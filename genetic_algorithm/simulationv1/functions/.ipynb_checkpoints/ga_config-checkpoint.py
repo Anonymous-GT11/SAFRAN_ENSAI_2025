@@ -14,7 +14,7 @@ from dataclasses import dataclass
 @dataclass
 class GAConfig:
     population_size: int = 150
-    n_generations: int = 200
+    n_generations: int = 250
     tournament_rate: float = 0.1
     elitism_rate: float = 0.05
     crossover_rate: float = 0.85
@@ -23,7 +23,7 @@ class GAConfig:
     mutation_strength_initial: float = 0.15
     mutation_decay: float = 0.998
     mutation_strength_min: float = 0.01
-    early_stop_generations: int = 30
+    early_stop_generations: int =  40
     early_stop_tolerance: float = 1e-10
 
     @property
@@ -51,8 +51,8 @@ OUTPUT_BASE_DIR = "../experiments"
 # ============================================================
 # ALL AVAILABLE CONTEXTS AND SENSORS
 # ============================================================
-ALL_CONTEXTS =  ["CRUISE"] #  "TAKEOFF", "CLIMB1", "CLIMB2"]
-ALL_SENSORS = ["HPC_Tin", "LPT_Tin", "HPC_Pout_st"]
+# ALL_CONTEXTS =  ["CRUISE"] #  "TAKEOFF", "CLIMB1", "CLIMB2"]
+# ALL_SENSORS = ["HPC_Tin", "LPT_Tin", "HPC_Pout_st"]
 
 # Indicators to estimate (fixed - 3 components)
 INDICATORS_TO_ESTIMATE = [
@@ -64,9 +64,9 @@ INDICATORS_TO_ESTIMATE = [
 # Context and sensor mappings
 CONTEXT_MAP = {
     "CRUISE": Cruise_DeckSMR,
-    "TAKEOFF": Takeoff_DeckSMR,
-    "CLIMB1": Climb1_DeckSMR,
-    "CLIMB2": Climb2_DeckSMR,
+    # "TAKEOFF": Takeoff_DeckSMR,
+    # "CLIMB1": Climb1_DeckSMR,
+    # "CLIMB2": Climb2_DeckSMR,
 }
 
 SENSOR_OBJECTS = {
@@ -97,24 +97,59 @@ INDICATOR_SHORT_NAMES = {
 ##------------------
 # Define differents scenarios for the ablation (sensor/context removal) study
 # Define scenarios
-CONTEXT_SCENARIOS = [
-        ["CRUISE"],
-        # ["CRUISE", "TAKEOFF"],
-        # ["CRUISE", "TAKEOFF", "CLIMB1"],
-        # ["CRUISE", "TAKEOFF", "CLIMB1", "CLIMB2"],
-    ]
+# CONTEXT_SCENARIOS = [
+#         ["CRUISE"],
+#         # ["CRUISE", "TAKEOFF"],
+#         # ["CRUISE", "TAKEOFF", "CLIMB1"],
+#         # ["CRUISE", "TAKEOFF", "CLIMB1", "CLIMB2"],
+#     ]
     
+# SENSOR_SCENARIOS = [
+#         ["HPC_Tin"],
+#         ["HPC_Tin", "LPT_Tin"],
+#         ["HPC_Tin", "LPT_Tin", "HPC_Pout_st"],
+#     ]
+
+
+
+
+# ============================================================
+# RECOMMENDED CONFIGURATION
+# ============================================================
+
+ALL_CONTEXTS = ["CRUISE"] #, "TAKEOFF", "CLIMB1", "CLIMB2"]
+ALL_SENSORS = ["HPC_Tin", "LPT_Tin", "HPC_Pout_st"]
+
+CONTEXT_MAP = {
+    "CRUISE": Cruise_DeckSMR,
+    # "TAKEOFF": Takeoff_DeckSMR,
+    # "CLIMB1": Climb1_DeckSMR,
+    # "CLIMB2": Climb2_DeckSMR,
+}
+
+CONTEXT_SCENARIOS = [
+    ["CRUISE"],  
+    # ["TAKEOFF"], # 1 ctx - baseline
+    # ["CLIMB1"],
+   # [ "CLIMB2"]
+    # ["CRUISE", "TAKEOFF"],                         # 2 ctx - add transient
+    # ["CRUISE", "TAKEOFF", "CLIMB1", "CLIMB2"],     # 4 ctx - all
+]
+
 SENSOR_SCENARIOS = [
-        ["HPC_Tin"],
-        ["HPC_Tin", "LPT_Tin"],
-        ["HPC_Tin", "LPT_Tin", "HPC_Pout_st"],
-    ]
+    ["HPC_Tin"],                                   # 1 sens - temperature only
+    ["HPC_Tin", "LPT_Tin"],                        # 2 sens - both temperatures
+    ["HPC_Tin", "LPT_Tin", "HPC_Pout_st"],         # 3 sens - add pressure
+]
+
+
 
 
 # Sensor order in noise covariance matrices (6x6)
 NOISE_SENSOR_ORDER = ["HP_Nmech", "HPC_Tout", "HPC_Tin", "LPT_Tin", "Fuel_flow", "HPC_Pout_st"]
 
 # Experiment settings
-N_TEST_ROWS = 5  # Number of rows to test per scenario
+N_TEST_ROWS = 5 # 10  # Number of rows to test per scenario
+ROW_TO_USE = None
 
 INDEX_TO_RUN_ABLATION = 53
