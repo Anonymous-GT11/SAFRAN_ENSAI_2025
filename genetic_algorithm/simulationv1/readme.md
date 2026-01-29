@@ -164,13 +164,13 @@ These factors make the inverse problem **ill-posed and highly non-linear**, moti
 | Parameter | Value | Explanation | How to Tune |
 |-----------|-------|-------------|-------------|
 | `population_size` | 40-200 | Larger = more exploration, slower | If stuck in local minima, increase |
-| `tournament_size` | 0.1 | Selection pressure (higher = more greedy) | 10% .If diversity too low, decrease to 2 |
+| `tournament_size` | 0.1 | Selection pressure (higher = more greedy) | 10%  |
 | `elitism_rate` | 0.01-0.05 | Best individuals preserved | Keep 2-5% of population |
 | `crossover_rate` | 0.85 | Probability of combining parents | 0.7-0.9 typical |
 | `blx_alpha` | 0.5 | Exploration range in crossover | Higher = more exploration |
 | `mutation_rate` | 0.3 | Probability per gene | 0.1-0.5 typical |
 | `mutation_strength_initial` | 0.15 | Starting σ (fraction of range) | If no progress, increase |
-| `mutation_decay` | 0.98 | σ_t = σ_0 × λ^t | See detailed explanation below |
+| `mutation_decay` | 0.98 | σ_t = σ_0 × λ^t | ---|
 | `mutation_strength_min` | 0.001 | Floor for mutation | Should be ~1e-3 to 1e-4 for fine-tuning |
 | `early_stop_generations` | 15-50 | Stop if no improvement | Higher if expecting slow convergence |
 
